@@ -6,8 +6,8 @@ const Avatar = () => {
   const [sprite, setSprite] = useState("micah");
   const [seed, setSeed] = useState(100000);
 
-  // 🎨 Static styling configuration (future dynamic-ready)
-  const styleURLParams = "backgroundColor=ffe0e0&backgroundType=gradientLinear&radius=50&scale=100&flip=true";
+  const styleURLParams =
+    "backgroundColor=ffe0e0&backgroundType=gradientLinear&radius=50&scale=100&flip=true";
 
   const handleSprite = (spritetype) => {
     setSprite(spritetype);
@@ -18,7 +18,7 @@ const Avatar = () => {
     setSeed(randomSeed);
   };
 
-  const downloadImage = () => {
+  const downloadImageSVG = () => {
     const url = `https://api.dicebear.com/7.x/${sprite}/svg?seed=${seed}&${styleURLParams}`;
     Axios({
       method: "get",
@@ -42,6 +42,36 @@ const Avatar = () => {
       });
   };
 
+  const downloadAsJPG = () => {
+    const svgUrl = `https://api.dicebear.com/7.x/${sprite}/svg?seed=${seed}&${styleURLParams}`;
+    fetch(svgUrl)
+      .then(res => res.text())
+      .then(svgText => {
+        const svgBlob = new Blob([svgText], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const jpgUrl = canvas.toDataURL('image/jpeg');
+          const link = document.createElement('a');
+          link.href = jpgUrl;
+          link.download = `${sprite}-${seed}.jpg`;
+          document.body.appendChild(link);
+          link.click();
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+        };
+        img.src = url;
+      })
+      .catch((err) => {
+        console.error("Failed to convert SVG to JPG:", err);
+      });
+  };
+
   return (
     <div className="container">
       <nav className="nav">
@@ -53,6 +83,7 @@ const Avatar = () => {
           <button className={sprite === "micah" ? "selected" : ""} onClick={() => handleSprite("micah")}>Cute Avatar</button>
           <button className={sprite === "bottts" ? "selected" : ""} onClick={() => handleSprite("bottts")}>Robot</button>
           <button className={sprite === "avataaars" ? "selected" : ""} onClick={() => handleSprite("avataaars")}>Illustrated Human</button>
+          <button className={sprite === "jdenticon" ? "selected" : ""} onClick={() => handleSprite("jdenticon")}>Vector Geometry</button>
           <button className={sprite === "identicon" ? "selected" : ""} onClick={() => handleSprite("identicon")}>Identi Pattern</button>
         </div>
 
@@ -65,7 +96,8 @@ const Avatar = () => {
 
         <div className="generate">
           <button id="gen" onClick={handleGenerate}>Next</button>
-          <button id="down" onClick={downloadImage}>Download</button>
+          <button id="down" onClick={downloadImageSVG}>Download SVG</button>
+          <button id="down-jpg" onClick={downloadAsJPG}>Download JPG</button>
         </div>
       </div>
     </div>

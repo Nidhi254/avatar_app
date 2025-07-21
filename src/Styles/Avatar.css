@@ -20,15 +20,6 @@ body {
   color: #333;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-button, a {
-  cursor: pointer;
-}
-
 .container {
   width: 100%;
 }
@@ -91,9 +82,10 @@ button:active {
   color: white;
 }
 
-#down {
+#down, #down-jpg {
   background-color: var(--btn-danger);
   color: white;
+  margin-left: 10px;
 }
 
 .selected {
