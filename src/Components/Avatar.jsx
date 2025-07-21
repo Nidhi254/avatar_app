@@ -83,7 +83,6 @@ const Avatar = () => {
           <button className={sprite === "micah" ? "selected" : ""} onClick={() => handleSprite("micah")}>Cute Avatar</button>
           <button className={sprite === "bottts" ? "selected" : ""} onClick={() => handleSprite("bottts")}>Robot</button>
           <button className={sprite === "avataaars" ? "selected" : ""} onClick={() => handleSprite("avataaars")}>Illustrated Human</button>
-          <button className={sprite === "jdenticon" ? "selected" : ""} onClick={() => handleSprite("jdenticon")}>Vector Geometry</button>
           <button className={sprite === "identicon" ? "selected" : ""} onClick={() => handleSprite("identicon")}>Identi Pattern</button>
         </div>
 
